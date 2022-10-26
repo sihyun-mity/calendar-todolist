@@ -1,15 +1,25 @@
-import React from 'react';
-import { useRecoilState } from 'recoil';
-import { date } from './stores/atom';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import styled from 'styled-components';
+import { Calendar, Header, Todo } from './components';
 
 const App = (): JSX.Element => {
-  const [now, setNow] = useRecoilState(date);
-  console.log(now);
-  console.log(format(now, 'PPP', { locale: ko }));
-
-  return <div></div>;
+  return (
+    <Box>
+      <Header />
+      <Content>
+        <Calendar />
+        <Todo />
+      </Content>
+    </Box>
+  );
 };
 
 export default App;
+
+const Box = styled.main`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Content = styled.section`
+  display: flex;
+`;
