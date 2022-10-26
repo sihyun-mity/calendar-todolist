@@ -1,5 +1,6 @@
 {
   "name": "calendar-todolist",
+  "homepage": "https://sihyun-mity.github.io/calendar-todolist",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
