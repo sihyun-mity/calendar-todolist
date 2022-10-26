@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const date = atom({
+export const date = atom<Date>({
   key: 'date',
-  default: Date.now(),
+  default: new Date(),
 });

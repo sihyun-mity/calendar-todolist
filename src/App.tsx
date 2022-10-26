@@ -22,4 +22,5 @@ const Box = styled.main`
 
 const Content = styled.section`
   display: flex;
+  margin-top: 64px;
 `;
