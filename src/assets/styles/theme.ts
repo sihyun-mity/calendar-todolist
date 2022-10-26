@@ -199,13 +199,21 @@ const color = {
   'blue-100': '#dbeafe',
 };
 
-// const ui = {
-//   hover:
-// }
+const ui = {
+  hover_bg: `{
+    cursor: pointer;
+    transition: background-color 200ms;
 
-export const theme = {
-  font,
-  color,
+    &:hover {
+      background-color: ${color['grey-100']};
+    }
+
+    &:active:hover {
+      background-color: ${color['grey-200']};
+    }
+  }`,
 };
+
+export const theme = { font, color, ui };
 
 export type Theme = typeof theme;

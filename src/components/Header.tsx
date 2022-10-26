@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import leftArrow from '../assets/images/left-arrow.png';
 import rightArrow from '../assets/images/right-arrow.png';
 import { date } from '../stores';
+import DatePicker from './DatePicker';
 
 const Header = () => {
   const [targetDate, setTargetDate] = useRecoilState(date);
@@ -17,6 +18,7 @@ const Header = () => {
         </ControlBtn>
         <HeadingDate>
           {format(targetDate, 'Y년 MMM', { locale: ko })}
+          <DatePicker />
         </HeadingDate>
         <ControlBtn onClick={() => setTargetDate((prev) => addMonths(prev, 1))}>
           <Arrow src={rightArrow} />
@@ -48,11 +50,18 @@ const Content = styled.div`
 
 const HeadingDate = styled.h1`
   ${({ theme }) => theme.font.Heading6Medium};
-  margin: 0;
-  padding: 6px 8px;
+  position: relative;
+  margin: 0 2px;
+  padding: 4px 8px;
   color: ${({ theme }) => theme.color['grey-600']};
   border-radius: 6px;
-  cursor: pointer;
+
+  ${({ theme }) => theme.ui.hover_bg};
+
+  // For DatePicker
+  & > div {
+    margin-left: 8px;
+  }
 `;
 
 const ControlBtn = styled.button`
@@ -61,8 +70,10 @@ const ControlBtn = styled.button`
   align-items: center;
   padding: 8px;
   border: unset;
+  border-radius: 6px;
   background-color: unset;
-  cursor: pointer;
+
+  ${({ theme }) => theme.ui.hover_bg};
 `;
 
 const Arrow = styled.img`
