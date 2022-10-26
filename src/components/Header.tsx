@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import leftArrow from '../assets/images/left-arrow.png';
 import rightArrow from '../assets/images/right-arrow.png';
-import { date } from '../stores/atom';
+import { date } from '../stores';
 
 const Header = () => {
   const [targetDate, setTargetDate] = useRecoilState(date);
@@ -15,7 +15,9 @@ const Header = () => {
         <ControlBtn onClick={() => setTargetDate((prev) => subMonths(prev, 1))}>
           <Arrow src={leftArrow} />
         </ControlBtn>
-        <HeadingDate>{format(targetDate, 'Y년 MMM', { locale: ko })}</HeadingDate>
+        <HeadingDate>
+          {format(targetDate, 'Y년 MMM', { locale: ko })}
+        </HeadingDate>
         <ControlBtn onClick={() => setTargetDate((prev) => addMonths(prev, 1))}>
           <Arrow src={rightArrow} />
         </ControlBtn>
@@ -66,5 +68,6 @@ const ControlBtn = styled.button`
 const Arrow = styled.img`
   width: 16px;
   height: 16px;
-  filter: invert(33%) sepia(11%) saturate(654%) hue-rotate(176deg) brightness(94%) contrast(95%);
+  filter: invert(33%) sepia(11%) saturate(654%) hue-rotate(176deg)
+    brightness(94%) contrast(95%);
 `;
