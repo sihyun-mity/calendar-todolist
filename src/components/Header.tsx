@@ -40,14 +40,17 @@ const Content = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 12px 24px;
+  padding: 8px 24px;
   box-sizing: border-box;
 `;
 
 const HeadingDate = styled.h1`
   ${({ theme }) => theme.font.Heading6Medium};
   margin: 0;
+  padding: 6px 8px;
   color: ${({ theme }) => theme.color['grey-600']};
+  border-radius: 6px;
+  cursor: pointer;
 `;
 
 const ControlBtn = styled.button`
