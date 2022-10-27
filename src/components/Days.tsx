@@ -1,18 +1,16 @@
 import styled from 'styled-components';
 
-const Days = (): JSX.Element => {
-  return (
-    <Box>
-      <Day>일</Day>
-      <Day>월</Day>
-      <Day>화</Day>
-      <Day>수</Day>
-      <Day>목</Day>
-      <Day>금</Day>
-      <Day>토</Day>
-    </Box>
-  );
-};
+const Days = (): JSX.Element => (
+  <Box>
+    <Day>일</Day>
+    <Day>월</Day>
+    <Day>화</Day>
+    <Day>수</Day>
+    <Day>목</Day>
+    <Day>금</Day>
+    <Day>토</Day>
+  </Box>
+);
 
 export default Days;
 

@@ -1,7 +1,12 @@
 import styled from 'styled-components';
+import { useCalendar } from '../hooks';
 import Days from './Days';
 
 const Calendar = (): JSX.Element => {
+  const calendar = useCalendar();
+
+  console.log(calendar.get());
+
   return (
     <Box>
       <Days />
