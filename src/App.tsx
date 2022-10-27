@@ -1,12 +1,12 @@
-import { useRecoilState } from 'recoil';
-import styled from 'styled-components';
-import { Calendar, Header, Todo } from './components';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import { useMountEffect } from './hooks';
+import { Main } from './pages';
 import { viewHeight } from './stores';
 import { optimizeEvent } from './utils';
 
 const App = (): JSX.Element => {
-  const [vh, setVh] = useRecoilState(viewHeight);
+  const setVh = useSetRecoilState(viewHeight);
 
   const calculateViewHeight = (): void => setVh(window.innerHeight * 0.01);
 
@@ -20,25 +20,12 @@ const App = (): JSX.Element => {
   });
 
   return (
-    <Box>
-      <Header />
-      <Content vh={vh}>
-        <Calendar />
-        <Todo />
-      </Content>
-    </Box>
+    <BrowserRouter>
+      <Routes>
+        <Route path="calendar-todolist" element={<Main />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
 export default App;
-
-const Box = styled.main`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Content = styled.section<{ vh: number }>`
-  height: ${(props) => `${props.vh * 100 - 64 + 'px'}`};
-  display: flex;
-  margin-top: 64px;
-`;
