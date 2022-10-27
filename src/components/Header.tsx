@@ -54,6 +54,7 @@ const Box = styled.header`
   height: 64px;
   position: fixed;
   top: 0;
+  background-color: #fff;
   border-bottom: 1px solid ${({ theme }) => theme.color['grey-200']};
   box-sizing: border-box;
 `;
