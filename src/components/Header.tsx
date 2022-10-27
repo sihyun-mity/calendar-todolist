@@ -1,7 +1,7 @@
 import { addMonths, format, subMonths } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import leftArrow from '../assets/images/left-arrow.png';
 import rightArrow from '../assets/images/right-arrow.png';
@@ -10,6 +10,7 @@ import DatePicker from './DatePicker';
 
 const Header = (): JSX.Element => {
   const [targetDate, setTargetDate] = useRecoilState(date);
+  const resetTargetDate = useResetRecoilState(date);
   const [openPicker, setOpenPicker] = useState<boolean>(false);
 
   const handleWindow = (e: MouseEvent) =>
@@ -42,6 +43,7 @@ const Header = (): JSX.Element => {
         <ControlBtn onClick={() => setTargetDate((prev) => addMonths(prev, 1))}>
           <Arrow src={rightArrow} />
         </ControlBtn>
+        <SetToday onClick={() => resetTargetDate()}>오늘</SetToday>
       </Content>
     </Box>
   );
@@ -70,7 +72,6 @@ const Content = styled.div`
 
 const Title = styled.div`
   position: relative;
-  margin: 0 2px;
 
   // For DatePicker
   & > div {
@@ -105,4 +106,17 @@ const Arrow = styled.img`
   height: 16px;
   filter: invert(33%) sepia(11%) saturate(654%) hue-rotate(176deg)
     brightness(94%) contrast(95%);
+`;
+
+const SetToday = styled.button`
+  width: fit-content;
+  height: 36px;
+  margin-left: 8px;
+  padding: 0 16px;
+  border: 1px solid ${({ theme }) => theme.color['grey-200']};
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  ${({ theme }) => theme.font.Body3Label}
+  ${({ theme }) => theme.ui.hover_bg};
 `;

@@ -22,8 +22,16 @@ const Box = styled.header`
 
 const Day = styled.label`
   width: calc(100% / 7);
-  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 
   ${({ theme }) => theme.font.Body3Label};
   color: ${({ theme }) => theme.color['grey-400']};
+
+  &:not(:last-of-type) {
+    border-right: 1px solid ${({ theme }) => theme.color['grey-200']};
+  }
 `;

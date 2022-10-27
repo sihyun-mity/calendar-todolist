@@ -3,7 +3,7 @@ import normalize from 'styled-normalize';
 
 const GlobalStyle = createGlobalStyle`
   ${normalize}
-  
+
   *::-webkit-scrollbar {
     width: 16px;
   }
@@ -43,6 +43,11 @@ const GlobalStyle = createGlobalStyle`
 
   li::marker {
     display: none;
+  }
+
+  button {
+    background-color: unset;
+    cursor: pointer;
   }
 `;
 
