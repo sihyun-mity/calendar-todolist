@@ -25,5 +25,5 @@ const Day = styled.label`
   text-align: center;
 
   ${({ theme }) => theme.font.Body3Label};
-  color: ${({ theme }) => theme.color['grey-500']};
+  color: ${({ theme }) => theme.color['grey-400']};
 `;

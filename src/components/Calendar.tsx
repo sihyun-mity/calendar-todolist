@@ -13,13 +13,19 @@ const Calendar = (): JSX.Element => {
       <Days />
       <Board>
         {prev.map((ele, idx) => (
-          <PrevItem key={idx}>{ele}</PrevItem>
+          <PrevItem key={idx}>
+            <Day>{ele}</Day>
+          </PrevItem>
         ))}
         {now.map((ele, idx) => (
-          <NowItem key={idx}>{ele}</NowItem>
+          <NowItem key={idx}>
+            <Day>{ele}</Day>
+          </NowItem>
         ))}
         {next.map((ele, idx) => (
-          <NextItem key={idx}>{ele}</NextItem>
+          <NextItem key={idx}>
+            <Day>{ele}</Day>
+          </NextItem>
         ))}
       </Board>
     </Box>
@@ -35,12 +41,17 @@ const Box = styled.article`
 `;
 
 const Board = styled.div`
+  height: calc(100% - 32px);
   display: flex;
   flex-wrap: wrap;
 `;
 
 const Item = styled.div`
   width: calc(100% / 7);
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+  box-sizing: border-box;
   text-align: center;
 `;
 
@@ -55,3 +66,5 @@ const NowItem = styled(Item)`
 const NextItem = styled(Item)`
   color: ${({ theme }) => theme.color['grey-500']};
 `;
+
+const Day = styled.label``;
