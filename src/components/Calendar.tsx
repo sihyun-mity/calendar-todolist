@@ -35,7 +35,7 @@ const Calendar = (): JSX.Element => {
 export default Calendar;
 
 const Box = styled.article`
-  width: 100%;
+  flex: 2;
   display: flex;
   flex-direction: column;
 `;
@@ -50,9 +50,19 @@ const Item = styled.div`
   width: calc(100% / 7);
   display: flex;
   flex-direction: column;
-  padding: 4px 0;
+  padding: 8px 0;
   box-sizing: border-box;
   text-align: center;
+
+  ${({ theme }) => theme.ui.hover_bg};
+
+  &:not(:nth-of-type(7)) {
+    border-right: 1px solid ${({ theme }) => theme.color['grey-200']};
+  }
+
+  &:not(:nth-of-type(-n + 7)) {
+    border-top: 1px solid ${({ theme }) => theme.color['grey-200']};
+  }
 `;
 
 const PrevItem = styled(Item)`
