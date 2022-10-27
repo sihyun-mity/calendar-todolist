@@ -1,13 +1,17 @@
 import { addYears, format, subYears } from 'date-fns';
-import { HTMLAttributes, useState } from 'react';
-import styled from 'styled-components';
+import { HTMLAttributes, useCallback, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import styled, { css } from 'styled-components';
 import { useMountEffect } from '../hooks';
+import { date } from '../stores';
 
 const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
   const [years, setYears] = useState<number[]>([]);
   const [months, setMonths] = useState<number[]>([]);
+  const [ready, setReady] = useState<boolean>(false);
+  const [targetDate, setTargetDate] = useRecoilState(date);
 
-  const pushDate = () => {
+  const pushDate = (): void => {
     // Cleanup
     years.splice(0);
     months.splice(0);
@@ -28,20 +32,57 @@ const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
 
     setYears([...years]);
     setMonths([...months]);
+    setReady(true);
   };
+
+  const focusDate = useCallback((): void => {
+    const listHeight = document.querySelector(Box.toString())?.clientHeight;
+    const yearPosition = document.getElementById(
+      'DatePicker-Year-' + Number(format(targetDate, 'yyyy'))
+    )?.offsetTop;
+    const monthPosition = document.getElementById(
+      'DatePicker-Month-' + Number(format(targetDate, 'M'))
+    )?.offsetTop;
+
+    if (yearPosition && monthPosition && listHeight) {
+      document
+        .getElementById('DatePicker-Year')
+        ?.scrollTo(0, yearPosition - listHeight / 2);
+
+      document
+        .getElementById('DatePicker-Month')
+        ?.scrollTo(0, monthPosition - listHeight / 2);
+    }
+  }, [targetDate]);
 
   useMountEffect(() => pushDate(), { beforeRender: true });
 
+  useEffect(() => {
+    ready && focusDate();
+  }, [ready, focusDate]);
+
   return (
     <Box {...props} onClick={(e) => e.stopPropagation()}>
-      <List>
+      <List id="DatePicker-Year">
         {years.map((ele, idx) => (
-          <Item key={idx}>{ele}</Item>
+          <Item
+            id={'DatePicker-Year-' + ele}
+            key={idx}
+            selected={ele === Number(format(targetDate, 'yyyy'))}
+          >
+            {ele}
+          </Item>
         ))}
       </List>
-      <List>
+      <List id="DatePicker-Month">
         {months.map((ele, idx) => (
-          <Item key={idx}>{ele}</Item>
+          <Item
+            id={'DatePicker-Month-' + ele}
+            key={idx}
+            selected={ele === Number(format(targetDate, 'M'))}
+          >
+            {ele}
+          </Item>
         ))}
       </List>
     </Box>
@@ -77,11 +118,17 @@ const List = styled.ul`
   }
 `;
 
-const Item = styled.li`
+const Item = styled.li<{ selected: boolean }>`
   padding: 2px 6px;
   border-radius: 6px;
   color: ${({ theme }) => theme.color['grey-800']};
 
   ${({ theme }) => theme.font.Body1Label};
   ${({ theme }) => theme.ui.hover_bg};
+
+  ${(props) =>
+    props.selected &&
+    css`
+      background-color: ${props.theme.color['grey-200']};
+    `}
 `;
