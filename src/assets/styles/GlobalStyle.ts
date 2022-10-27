@@ -20,8 +20,8 @@ const GlobalStyle = createGlobalStyle`
     background-color: #888;
   }
 
-  *::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
+  html {
+    overflow: hidden;
   }
 
   body {
