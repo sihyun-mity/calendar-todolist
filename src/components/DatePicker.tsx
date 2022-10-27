@@ -1,5 +1,11 @@
 import { addYears, format, subYears } from 'date-fns';
-import { HTMLAttributes, useCallback, useEffect, useState } from 'react';
+import {
+  HTMLAttributes,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useRecoilState } from 'recoil';
 import styled, { css } from 'styled-components';
 import { useMountEffect } from '../hooks';
@@ -10,6 +16,14 @@ const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
   const [months, setMonths] = useState<number[]>([]);
   const [ready, setReady] = useState<boolean>(false);
   const [targetDate, setTargetDate] = useRecoilState(date);
+  const targetYear: number = useMemo(
+    () => Number(format(targetDate, 'yyyy')),
+    [targetDate]
+  );
+  const targetMonth: number = useMemo(
+    () => Number(format(targetDate, 'M')),
+    [targetDate]
+  );
 
   const pushDate = (): void => {
     // Cleanup
@@ -38,10 +52,10 @@ const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
   const focusDate = useCallback((): void => {
     const listHeight = document.querySelector(Box.toString())?.clientHeight;
     const yearPosition = document.getElementById(
-      'DatePicker-Year-' + Number(format(targetDate, 'yyyy'))
+      'DatePicker-Year-' + targetYear
     )?.offsetTop;
     const monthPosition = document.getElementById(
-      'DatePicker-Month-' + Number(format(targetDate, 'M'))
+      'DatePicker-Month-' + targetMonth
     )?.offsetTop;
 
     if (yearPosition && monthPosition && listHeight) {
@@ -53,7 +67,15 @@ const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
         .getElementById('DatePicker-Month')
         ?.scrollTo(0, monthPosition - listHeight / 2);
     }
-  }, [targetDate]);
+  }, [targetYear, targetMonth]);
+
+  const handleDate = (type: 'year' | 'month', value: number): void => {
+    if (type === 'year') {
+      setTargetDate(new Date(`${value}-${targetMonth}-01`));
+    } else {
+      setTargetDate(new Date(`${targetYear}-${value}-01`));
+    }
+  };
 
   useMountEffect(() => pushDate(), { beforeRender: true });
 
@@ -68,7 +90,8 @@ const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
           <Item
             id={'DatePicker-Year-' + ele}
             key={idx}
-            selected={ele === Number(format(targetDate, 'yyyy'))}
+            selected={ele === targetYear}
+            onClick={() => handleDate('year', ele)}
           >
             {ele}
           </Item>
@@ -79,7 +102,8 @@ const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
           <Item
             id={'DatePicker-Month-' + ele}
             key={idx}
-            selected={ele === Number(format(targetDate, 'M'))}
+            selected={ele === targetMonth}
+            onClick={() => handleDate('month', ele)}
           >
             {ele}
           </Item>
