@@ -1,5 +1,6 @@
 import { addMonths, format, subMonths } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import leftArrow from '../assets/images/left-arrow.png';
@@ -7,8 +8,24 @@ import rightArrow from '../assets/images/right-arrow.png';
 import { date } from '../stores';
 import DatePicker from './DatePicker';
 
-const Header = () => {
+const Header = (): JSX.Element => {
   const [targetDate, setTargetDate] = useRecoilState(date);
+  const [openPicker, setOpenPicker] = useState<boolean>(false);
+
+  const handleWindow = (e: MouseEvent) =>
+    !document
+      .querySelector('.DatePicker-Header')
+      ?.contains(e?.target as HTMLElement) && setOpenPicker(false);
+
+  useEffect(() => {
+    if (openPicker) {
+      window.addEventListener('mousedown', handleWindow);
+    } else {
+      window.removeEventListener('mousedown', handleWindow);
+    }
+
+    return () => window.removeEventListener('mousedown', handleWindow);
+  }, [openPicker]);
 
   return (
     <Box>
@@ -16,10 +33,12 @@ const Header = () => {
         <ControlBtn onClick={() => setTargetDate((prev) => subMonths(prev, 1))}>
           <Arrow src={leftArrow} />
         </ControlBtn>
-        <HeadingDate>
-          {format(targetDate, 'Y년 MMM', { locale: ko })}
-          <DatePicker />
-        </HeadingDate>
+        <Title>
+          <HeadingDate onClick={() => setOpenPicker((prev) => !prev)}>
+            {format(targetDate, 'Y년 MMM', { locale: ko })}
+          </HeadingDate>
+          {openPicker && <DatePicker className="DatePicker-Header" />}
+        </Title>
         <ControlBtn onClick={() => setTargetDate((prev) => addMonths(prev, 1))}>
           <Arrow src={rightArrow} />
         </ControlBtn>
@@ -48,20 +67,24 @@ const Content = styled.div`
   box-sizing: border-box;
 `;
 
-const HeadingDate = styled.h1`
-  ${({ theme }) => theme.font.Heading6Medium};
+const Title = styled.div`
   position: relative;
   margin: 0 2px;
-  padding: 4px 8px;
-  color: ${({ theme }) => theme.color['grey-600']};
-  border-radius: 6px;
-
-  ${({ theme }) => theme.ui.hover_bg};
 
   // For DatePicker
   & > div {
     margin-left: 8px;
   }
+`;
+
+const HeadingDate = styled.h1`
+  ${({ theme }) => theme.font.Heading6Medium};
+  padding: 4px 8px;
+  margin: 0;
+  color: ${({ theme }) => theme.color['grey-600']};
+  border-radius: 6px;
+
+  ${({ theme }) => theme.ui.hover_bg};
 `;
 
 const ControlBtn = styled.button`
