@@ -130,7 +130,7 @@ const Box = styled.div`
 `;
 
 const List = styled.ul`
-  max-height: 20vmin;
+  max-height: 20vh;
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
