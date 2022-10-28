@@ -82,7 +82,8 @@ const Board = styled.div<{ date: string }>`
   flex-wrap: wrap;
 
   & > .date-${(props) => props.date} > label {
-    background-color: ${({ theme }) => theme.color['blue-200']};
+    background-color: ${({ theme }) => theme.color['blue-600']};
+    color: #fff;
   }
 `;
 
