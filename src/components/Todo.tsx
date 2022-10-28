@@ -16,7 +16,11 @@ const Todo = (): JSX.Element => {
       <List>
         {makeTodo && <TodoEditor onComplete={() => setMakeTodo(false)} />}
         {data[yyyymmdd]?.map((ele, idx) => (
-          <TodoEditor key={idx} value={ele.value} />
+          <TodoEditor
+            key={`date-${yyyymmdd}-${idx}`}
+            value={ele.value}
+            index={idx}
+          />
         ))}
       </List>
     </Box>

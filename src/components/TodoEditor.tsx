@@ -8,6 +8,7 @@ import { TodoDataModel } from '../types/TodoDataModel';
 interface TodoEditorPropsType {
   value?: any;
   onComplete?: () => void;
+  index?: number;
 }
 
 interface StyledPropsType {
@@ -15,39 +16,48 @@ interface StyledPropsType {
 }
 
 const TodoEditor = (props: TodoEditorPropsType) => {
-  const { value, onComplete } = props;
+  const { value, onComplete, index } = props;
   const yyyymmdd = useRecoilValue(formattingDate);
   const [focus, setFocus] = useState<boolean>(false);
   const [data, setData] = useRecoilState(getTodo);
 
-  const saveTodo = (value?: string) => {
+  const saveTodo = (text?: string) => {
     setFocus(false);
 
-    if (value) {
-      let todoObj: TodoDataModel;
+    if (text) {
+      let todoObj: TodoDataModel = {};
 
-      if (data[yyyymmdd]) {
+      // 기존 Todo 업데이트 확인 조건문
+      if (value && index !== undefined) {
         todoObj = {
-          [yyyymmdd]: [...data?.[yyyymmdd], { time: '18:00', value }],
+          [yyyymmdd]: data[yyyymmdd].map((ele, idx) =>
+            Object.assign({}, ele, idx === index && { value: text })
+          ),
         };
       } else {
-        todoObj = {
-          [yyyymmdd]: [{ time: '18:00', value }],
-        };
+        // 기존 배열 데이터 확인 조건문
+        if (data[yyyymmdd]) {
+          todoObj = {
+            [yyyymmdd]: [...data[yyyymmdd], { time: '18:00', value: text }],
+          };
+        } else {
+          todoObj = {
+            [yyyymmdd]: [{ time: '18:00', value: text }],
+          };
+        }
       }
 
-      setData(todoObj);
+      setData({ ...data, ...todoObj });
     }
+
     onComplete && onComplete();
   };
 
-  const editTodo = () => {
-    setFocus(true);
-  };
-
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    /Escape|Enter/g.test(e.key) &&
+    if (/Escape|Enter/g.test(e.key)) {
       saveTodo((e.target as HTMLInputElement).value);
+      (document.querySelector(Input.toString()) as HTMLInputElement).blur();
+    }
   };
 
   useMountEffect(() => {
@@ -62,8 +72,7 @@ const TodoEditor = (props: TodoEditorPropsType) => {
       <Input
         type="text"
         defaultValue={value}
-        onFocus={editTodo}
-        onBlur={(e) => saveTodo(e.target.value)}
+        onBlur={(e) => focus && saveTodo(e.target.value)}
         onKeyDown={(e) => handleKeydown(e)}
       />
     </Box>
