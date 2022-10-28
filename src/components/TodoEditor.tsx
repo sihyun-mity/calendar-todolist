@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { useMountEffect } from '../hooks';
 import { formattingDate, getTodo } from '../stores';
 import { TodoDataModel } from '../types/TodoDataModel';
+import minus from '../assets/images/minus.png';
 
 interface TodoEditorPropsType {
   value?: any;
@@ -52,7 +53,7 @@ const TodoEditor = (props: TodoEditorPropsType) => {
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (/Escape|Enter/g.test(e.key)) {
       saveTodo((e.target as HTMLInputElement).value);
-      (document.querySelector(Input.toString()) as HTMLInputElement).blur();
+      e.currentTarget.blur();
     }
   };
 
@@ -72,6 +73,9 @@ const TodoEditor = (props: TodoEditorPropsType) => {
         onBlur={(e) => focus && saveTodo(e.target.value)}
         onKeyDown={(e) => handleKeydown(e)}
       />
+      <Remove>
+        <RemoveIcon src={minus} />
+      </Remove>
     </Box>
   );
 };
@@ -79,6 +83,8 @@ const TodoEditor = (props: TodoEditorPropsType) => {
 export default TodoEditor;
 
 const Box = styled.li<{ focus: boolean }>`
+  display: flex;
+  align-items: center;
   border-bottom: 1px solid ${({ theme }) => theme.color['grey-200']};
   box-sizing: border-box;
   transition: border-bottom 200ms;
@@ -105,4 +111,14 @@ const Input = styled.input`
   &:focus {
     outline: 0;
   }
+`;
+
+const Remove = styled.button`
+  padding: 2px;
+  border: 0;
+`;
+
+const RemoveIcon = styled.img`
+  width: 18px;
+  height: 18px;
 `;
