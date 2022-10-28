@@ -4,20 +4,23 @@ import styled, { css } from 'styled-components';
 import { useMountEffect } from '../hooks';
 import { formattingDate, getTodo } from '../stores';
 import { TodoDataModel } from '../types/TodoDataModel';
+import minus from '../assets/images/minus.png';
 
 interface TodoEditorPropsType {
   value?: any;
   onComplete?: () => void;
   index?: number;
+  edit?: boolean;
+  setEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TodoEditor = (props: TodoEditorPropsType) => {
-  const { value, onComplete, index } = props;
+const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
+  const { value, onComplete, index, edit, setEdit } = props;
   const yyyymmdd = useRecoilValue(formattingDate);
   const [focus, setFocus] = useState<boolean>(false);
   const [data, setData] = useRecoilState(getTodo);
 
-  const saveTodo = (text?: string) => {
+  const saveTodo = (text?: string): void => {
     setFocus(false);
 
     if (text) {
@@ -43,16 +46,24 @@ const TodoEditor = (props: TodoEditorPropsType) => {
         }
       }
 
-      setData({ ...data, ...todoObj });
+      setData((prev) => ({ ...prev, ...todoObj }));
     }
 
     onComplete && onComplete();
   };
 
-  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const removeTodo = (index: number): void => {
+    const todoObj = {
+      [yyyymmdd]: data[yyyymmdd].filter((ele, idx) => idx !== index),
+    };
+
+    setData((prev) => ({ ...prev, ...todoObj }));
+  };
+
+  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (/Escape|Enter/g.test(e.key)) {
       saveTodo((e.target as HTMLInputElement).value);
-      (document.querySelector(Input.toString()) as HTMLInputElement).blur();
+      e.currentTarget.blur();
     }
   };
 
@@ -68,10 +79,18 @@ const TodoEditor = (props: TodoEditorPropsType) => {
       <Input
         type="text"
         defaultValue={value}
-        onFocus={() => setFocus(true)}
+        onFocus={() => {
+          setEdit && setEdit(false);
+          setFocus(true);
+        }}
         onBlur={(e) => focus && saveTodo(e.target.value)}
         onKeyDown={(e) => handleKeydown(e)}
       />
+      {edit && (
+        <Remove onClick={() => index !== undefined && removeTodo(index)}>
+          <RemoveIcon src={minus} />
+        </Remove>
+      )}
     </Box>
   );
 };
@@ -79,6 +98,8 @@ const TodoEditor = (props: TodoEditorPropsType) => {
 export default TodoEditor;
 
 const Box = styled.li<{ focus: boolean }>`
+  display: flex;
+  align-items: center;
   border-bottom: 1px solid ${({ theme }) => theme.color['grey-200']};
   box-sizing: border-box;
   transition: border-bottom 200ms;
@@ -105,4 +126,14 @@ const Input = styled.input`
   &:focus {
     outline: 0;
   }
+`;
+
+const Remove = styled.button`
+  padding: 2px;
+  border: 0;
+`;
+
+const RemoveIcon = styled.img`
+  width: 18px;
+  height: 18px;
 `;

@@ -13,7 +13,7 @@ const Header = (): JSX.Element => {
   const resetTargetDate = useResetRecoilState(date);
   const [openPicker, setOpenPicker] = useState<boolean>(false);
 
-  const handleWindow = (e: MouseEvent) =>
+  const handleWindow = (e: MouseEvent): false | void =>
     !document
       .querySelector('.DatePicker-Header')
       ?.contains(e?.target as HTMLElement) && setOpenPicker(false);
