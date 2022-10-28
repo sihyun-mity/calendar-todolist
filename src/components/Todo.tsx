@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { formattingDate } from '../stores';
-import { TodoDataModel } from '../types/TodoDataModel';
+import { formattingDate, getTodo } from '../stores';
 import TodoEditor from './TodoEditor';
 import TodoHandler from './TodoHandler';
 
 const Todo = (): JSX.Element => {
   const yyyymmdd = useRecoilValue(formattingDate);
   const [makeTodo, setMakeTodo] = useState<boolean>(false);
-  const data: TodoDataModel = JSON.parse(
-    window.localStorage.getItem('todo') || '{}'
-  );
+  const data = useRecoilValue(getTodo);
 
   return (
     <Box>

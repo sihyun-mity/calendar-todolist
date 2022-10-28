@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
 import { useMountEffect } from '../hooks';
-import { formattingDate } from '../stores';
+import { formattingDate, getTodo } from '../stores';
 import { TodoDataModel } from '../types/TodoDataModel';
 
 interface TodoEditorPropsType {
@@ -18,11 +18,11 @@ const TodoEditor = (props: TodoEditorPropsType) => {
   const { value, onComplete } = props;
   const yyyymmdd = useRecoilValue(formattingDate);
   const [focus, setFocus] = useState<boolean>(false);
-  const data: TodoDataModel = JSON.parse(
-    window.localStorage.getItem('todo') || '{}'
-  );
+  const [data, setData] = useRecoilState(getTodo);
 
   const saveTodo = (value?: string) => {
+    setFocus(false);
+
     if (value) {
       let todoObj: TodoDataModel;
 
@@ -36,12 +36,13 @@ const TodoEditor = (props: TodoEditorPropsType) => {
         };
       }
 
-      window.localStorage.setItem(
-        'todo',
-        JSON.stringify({ ...data, ...todoObj })
-      );
+      setData(todoObj);
     }
     onComplete && onComplete();
+  };
+
+  const editTodo = () => {
+    setFocus(true);
   };
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -61,6 +62,7 @@ const TodoEditor = (props: TodoEditorPropsType) => {
       <Input
         type="text"
         defaultValue={value}
+        onFocus={editTodo}
         onBlur={(e) => saveTodo(e.target.value)}
         onKeyDown={(e) => handleKeydown(e)}
       />

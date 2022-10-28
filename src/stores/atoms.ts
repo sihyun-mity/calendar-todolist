@@ -9,3 +9,8 @@ export const date = atom<Date>({
   key: 'date',
   default: new Date(),
 });
+
+export const todo = atom<string | null>({
+  key: 'todo',
+  default: window.localStorage.getItem('todo'),
+});
