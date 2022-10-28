@@ -1,17 +1,13 @@
 import { addMonths, format, setDate, subMonths } from 'date-fns';
-import { useMemo } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useCalendar } from '../hooks';
-import { date } from '../stores';
+import { date, formattingDate } from '../stores';
 import Days from './Days';
 
 const Calendar = (): JSX.Element => {
   const [targetDate, setTargetDate] = useRecoilState(date);
-  const formattingDate: string = useMemo(
-    () => format(targetDate, 'yyyyMMdd'),
-    [targetDate]
-  );
+  const yyyymmdd = useRecoilValue(formattingDate);
   const calendar = useCalendar();
   const prev = calendar.getPrev();
   const now = calendar.getNow();
@@ -36,7 +32,7 @@ const Calendar = (): JSX.Element => {
   return (
     <Box>
       <Days />
-      <Board date={formattingDate} onClick={(e) => handleDate(e)}>
+      <Board date={yyyymmdd} onClick={(e) => handleDate(e)}>
         {prev.map((ele, idx) => (
           <PrevItem
             className={`date-${format(
@@ -85,8 +81,9 @@ const Board = styled.div<{ date: string }>`
   display: flex;
   flex-wrap: wrap;
 
-  & > .date-${(props) => props.date} {
-    background-color: ${({ theme }) => theme.color['grey-200']};
+  & > .date-${(props) => props.date} > label {
+    background-color: ${({ theme }) => theme.color['blue-600']};
+    color: #fff;
   }
 `;
 
@@ -94,9 +91,9 @@ const Item = styled.div`
   width: calc(100% / 7);
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 8px 0;
   box-sizing: border-box;
-  text-align: center;
 
   ${({ theme }) => theme.ui.hover_bg};
 
@@ -121,4 +118,9 @@ const NextItem = styled(Item)`
   color: ${({ theme }) => theme.color['grey-500']};
 `;
 
-const Day = styled.label``;
+const Day = styled.label`
+  padding: 4px;
+  border-radius: 99px;
+  box-sizing: border-box;
+  text-align: center;
+`;
