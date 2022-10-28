@@ -30,24 +30,22 @@ const Header = (): JSX.Element => {
 
   return (
     <Box>
-      <Content>
-        <ControlBtn onClick={() => setTargetDate((prev) => subMonths(prev, 1))}>
-          <Arrow src={leftArrow} />
-        </ControlBtn>
-        <Title>
-          <HeadingDate
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => setOpenPicker((prev) => !prev)}
-          >
-            {format(targetDate, 'Y년 MMM', { locale: ko })}
-          </HeadingDate>
-          {openPicker && <DatePicker className="DatePicker-Header" />}
-        </Title>
-        <ControlBtn onClick={() => setTargetDate((prev) => addMonths(prev, 1))}>
-          <Arrow src={rightArrow} />
-        </ControlBtn>
-        <SetToday onClick={() => resetTargetDate()}>오늘</SetToday>
-      </Content>
+      <ControlBtn onClick={() => setTargetDate((prev) => subMonths(prev, 1))}>
+        <Arrow src={leftArrow} />
+      </ControlBtn>
+      <Title>
+        <HeadingDate
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={() => setOpenPicker((prev) => !prev)}
+        >
+          {format(targetDate, 'Y년 MMM', { locale: ko })}
+        </HeadingDate>
+        {openPicker && <DatePicker className="DatePicker-Header" />}
+      </Title>
+      <ControlBtn onClick={() => setTargetDate((prev) => addMonths(prev, 1))}>
+        <Arrow src={rightArrow} />
+      </ControlBtn>
+      <SetToday onClick={() => resetTargetDate()}>오늘</SetToday>
     </Box>
   );
 };
@@ -57,19 +55,14 @@ export default Header;
 const Box = styled.header`
   width: 100%;
   height: 64px;
-  position: fixed;
-  top: 0;
-  background-color: #fff;
-  border-bottom: 1px solid ${({ theme }) => theme.color['grey-200']};
-  box-sizing: border-box;
-`;
-
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 10;
   padding: 8px 24px;
+  background-color: #fff;
+  border-bottom: 1px solid ${({ theme }) => theme.color['grey-200']};
   box-sizing: border-box;
 `;
 

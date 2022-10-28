@@ -11,10 +11,6 @@ interface TodoEditorPropsType {
   index?: number;
 }
 
-interface StyledPropsType {
-  [props: string]: any;
-}
-
 const TodoEditor = (props: TodoEditorPropsType) => {
   const { value, onComplete, index } = props;
   const yyyymmdd = useRecoilValue(formattingDate);
@@ -72,6 +68,7 @@ const TodoEditor = (props: TodoEditorPropsType) => {
       <Input
         type="text"
         defaultValue={value}
+        onFocus={() => setFocus(true)}
         onBlur={(e) => focus && saveTodo(e.target.value)}
         onKeyDown={(e) => handleKeydown(e)}
       />
@@ -81,7 +78,7 @@ const TodoEditor = (props: TodoEditorPropsType) => {
 
 export default TodoEditor;
 
-const Box = styled.li<StyledPropsType>`
+const Box = styled.li<{ focus: boolean }>`
   border-bottom: 1px solid ${({ theme }) => theme.color['grey-200']};
   box-sizing: border-box;
   transition: border-bottom 200ms;
