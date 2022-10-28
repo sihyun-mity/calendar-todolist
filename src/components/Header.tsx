@@ -1,6 +1,6 @@
 import { addMonths, format, subMonths } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import leftArrow from '../assets/images/left-arrow.png';
