@@ -5,7 +5,12 @@ import styled from 'styled-components';
 import { date } from '../stores';
 import plus from '../assets/images/plus.png';
 
-const TodoHandler = () => {
+interface TodoHandlerPropsType {
+  makeTodo: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const TodoHandler = (props: TodoHandlerPropsType) => {
+  const { makeTodo } = props;
   const targetDate = useRecoilValue(date);
   const today = format(targetDate, 'd eeee', { locale: ko });
 
@@ -14,7 +19,7 @@ const TodoHandler = () => {
       <Date>{today}</Date>
       <Controller>
         <EditBtn>편집</EditBtn>
-        <PlusBtn src={plus} />
+        <PlusBtn src={plus} onClick={() => makeTodo(true)} />
       </Controller>
     </Box>
   );
@@ -26,6 +31,7 @@ const Box = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 24px;
 `;
 
 const Date = styled.h1`
