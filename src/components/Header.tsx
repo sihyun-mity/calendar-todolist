@@ -35,7 +35,10 @@ const Header = (): JSX.Element => {
           <Arrow src={leftArrow} />
         </ControlBtn>
         <Title>
-          <HeadingDate onClick={() => setOpenPicker((prev) => !prev)}>
+          <HeadingDate
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => setOpenPicker((prev) => !prev)}
+          >
             {format(targetDate, 'Y년 MMM', { locale: ko })}
           </HeadingDate>
           {openPicker && <DatePicker className="DatePicker-Header" />}
