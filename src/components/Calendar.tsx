@@ -36,7 +36,7 @@ const Calendar = (): JSX.Element => {
         {prev.map((ele, idx) => (
           <PrevItem
             className={`date-${format(
-              subMonths(setDate(targetDate, ele), 1),
+              subMonths(setDate(targetDate, 1), 1).setDate(ele),
               'yyyyMMdd'
             )}`}
             key={idx}
@@ -55,7 +55,7 @@ const Calendar = (): JSX.Element => {
         {next.map((ele, idx) => (
           <NextItem
             className={`date-${format(
-              addMonths(setDate(targetDate, ele), 1),
+              addMonths(setDate(targetDate, 1), 1).setDate(ele),
               'yyyyMMdd'
             )}`}
             key={idx}
@@ -119,8 +119,12 @@ const NextItem = styled(Item)`
 `;
 
 const Day = styled.label`
-  padding: 4px;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 99px;
-  box-sizing: border-box;
-  text-align: center;
+
+  ${({ theme }) => theme.font.Body3Label};
 `;
