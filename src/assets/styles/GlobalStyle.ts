@@ -35,6 +35,11 @@ const GlobalStyle = createGlobalStyle`
     -webkit-tap-highlight-color: transparent;
   }
 
+  img {
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+  }
+
   ul, li {
     list-style: none;
     margin: 0;

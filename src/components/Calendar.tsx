@@ -36,10 +36,10 @@ const Calendar = (): JSX.Element => {
         {prev.map((ele, idx) => (
           <PrevItem
             className={`date-${format(
-              subMonths(setDate(targetDate, ele), 1),
+              subMonths(setDate(targetDate, 1), 1).setDate(ele),
               'yyyyMMdd'
             )}`}
-            key={idx}
+            key={'prevCal-' + idx}
           >
             <Day>{ele}</Day>
           </PrevItem>
@@ -47,7 +47,7 @@ const Calendar = (): JSX.Element => {
         {now.map((ele, idx) => (
           <NowItem
             className={`date-${format(setDate(targetDate, ele), 'yyyyMMdd')}`}
-            key={idx}
+            key={'nowCal-' + idx}
           >
             <Day>{ele}</Day>
           </NowItem>
@@ -55,10 +55,10 @@ const Calendar = (): JSX.Element => {
         {next.map((ele, idx) => (
           <NextItem
             className={`date-${format(
-              addMonths(setDate(targetDate, ele), 1),
+              addMonths(setDate(targetDate, 1), 1).setDate(ele),
               'yyyyMMdd'
             )}`}
-            key={idx}
+            key={'nextCal-' + idx}
           >
             <Day>{ele}</Day>
           </NextItem>
@@ -92,6 +92,7 @@ const Item = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
   padding: 8px 0;
   box-sizing: border-box;
 
@@ -103,6 +104,15 @@ const Item = styled.div`
 
   &:not(:nth-of-type(-n + 7)) {
     border-top: 1px solid ${({ theme }) => theme.color['grey-200']};
+  }
+
+  &::before {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    content: '';
   }
 `;
 
@@ -119,8 +129,12 @@ const NextItem = styled(Item)`
 `;
 
 const Day = styled.label`
-  padding: 4px;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 99px;
-  box-sizing: border-box;
-  text-align: center;
+
+  ${({ theme }) => theme.font.Body3Label};
 `;

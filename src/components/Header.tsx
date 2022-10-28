@@ -1,6 +1,6 @@
 import { addMonths, format, subMonths } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import leftArrow from '../assets/images/left-arrow.png';
@@ -35,7 +35,10 @@ const Header = (): JSX.Element => {
           <Arrow src={leftArrow} />
         </ControlBtn>
         <Title>
-          <HeadingDate onClick={() => setOpenPicker((prev) => !prev)}>
+          <HeadingDate
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => setOpenPicker((prev) => !prev)}
+          >
             {format(targetDate, 'Y년 MMM', { locale: ko })}
           </HeadingDate>
           {openPicker && <DatePicker className="DatePicker-Header" />}
