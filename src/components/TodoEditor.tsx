@@ -10,15 +10,17 @@ interface TodoEditorPropsType {
   value?: any;
   onComplete?: () => void;
   index?: number;
+  edit?: boolean;
+  setEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TodoEditor = (props: TodoEditorPropsType) => {
-  const { value, onComplete, index } = props;
+const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
+  const { value, onComplete, index, edit, setEdit } = props;
   const yyyymmdd = useRecoilValue(formattingDate);
   const [focus, setFocus] = useState<boolean>(false);
   const [data, setData] = useRecoilState(getTodo);
 
-  const saveTodo = (text?: string) => {
+  const saveTodo = (text?: string): void => {
     setFocus(false);
 
     if (text) {
@@ -44,13 +46,21 @@ const TodoEditor = (props: TodoEditorPropsType) => {
         }
       }
 
-      setData({ ...data, ...todoObj });
+      setData((prev) => ({ ...prev, ...todoObj }));
     }
 
     onComplete && onComplete();
   };
 
-  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const removeTodo = (index: number): void => {
+    const todoObj = {
+      [yyyymmdd]: data[yyyymmdd].filter((ele, idx) => idx !== index),
+    };
+
+    setData((prev) => ({ ...prev, ...todoObj }));
+  };
+
+  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (/Escape|Enter/g.test(e.key)) {
       saveTodo((e.target as HTMLInputElement).value);
       e.currentTarget.blur();
@@ -69,13 +79,18 @@ const TodoEditor = (props: TodoEditorPropsType) => {
       <Input
         type="text"
         defaultValue={value}
-        onFocus={() => setFocus(true)}
+        onFocus={() => {
+          setEdit && setEdit(false);
+          setFocus(true);
+        }}
         onBlur={(e) => focus && saveTodo(e.target.value)}
         onKeyDown={(e) => handleKeydown(e)}
       />
-      <Remove>
-        <RemoveIcon src={minus} />
-      </Remove>
+      {edit && (
+        <Remove onClick={() => index !== undefined && removeTodo(index)}>
+          <RemoveIcon src={minus} />
+        </Remove>
+      )}
     </Box>
   );
 };

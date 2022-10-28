@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { formattingDate, getTodo } from '../stores';
@@ -8,18 +8,36 @@ import TodoHandler from './TodoHandler';
 const Todo = (): JSX.Element => {
   const yyyymmdd = useRecoilValue(formattingDate);
   const [makeTodo, setMakeTodo] = useState<boolean>(false);
+  const [editTodo, setEditTodo] = useState<boolean>(false);
   const data = useRecoilValue(getTodo);
+
+  const handleWindow = (e: MouseEvent): false | void =>
+    !document
+      .querySelector(List.toString())
+      ?.contains(e?.target as HTMLElement) && setEditTodo(false);
+
+  useEffect(() => {
+    if (editTodo) {
+      window.addEventListener('mousedown', handleWindow);
+    } else {
+      window.removeEventListener('mousedown', handleWindow);
+    }
+
+    return () => window.removeEventListener('mousedown', handleWindow);
+  }, [editTodo]);
 
   return (
     <Box>
-      <TodoHandler makeTodo={setMakeTodo} />
+      <TodoHandler makeTodo={setMakeTodo} editTodo={setEditTodo} />
       <List>
         {makeTodo && <TodoEditor onComplete={() => setMakeTodo(false)} />}
         {data[yyyymmdd]?.map((ele, idx) => (
           <TodoEditor
-            key={`date-${yyyymmdd}-${idx}`}
+            key={`todo-${yyyymmdd}-${idx}-${ele.value}`}
             value={ele.value}
             index={idx}
+            edit={editTodo}
+            setEdit={setEditTodo}
           />
         ))}
       </List>
@@ -39,5 +57,5 @@ const Box = styled.aside`
 `;
 
 const List = styled.ul`
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
