@@ -3,11 +3,13 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import styled, { css } from 'styled-components';
 import { useMountEffect } from '../hooks';
 import { formattingDate, getTodo } from '../stores';
-import { TodoDataModel } from '../types/TodoDataModel';
+import { TodoDataModel, TodoItemModel } from '../types/TodoDataModel';
 import minus from '../assets/images/minus.png';
+import TimePicker from './TimePicker';
+import { format } from 'date-fns';
 
 interface TodoEditorPropsType {
-  value?: any;
+  item?: TodoItemModel;
   onComplete?: () => void;
   index?: number;
   edit?: boolean;
@@ -15,33 +17,47 @@ interface TodoEditorPropsType {
 }
 
 const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
-  const { value, onComplete, index, edit, setEdit } = props;
+  const { item, onComplete, index, edit, setEdit } = props;
   const yyyymmdd = useRecoilValue(formattingDate);
   const [focus, setFocus] = useState<boolean>(false);
   const [data, setData] = useRecoilState(getTodo);
+  const [text, setText] = useState<string>(item?.value || '');
+  const [time, setTime] = useState<string>(
+    item?.time || format(new Date(), 'k:mm')
+  );
+  const [timeSelector, setTimeSelector] = useState<boolean>(false);
 
-  const saveTodo = (text?: string): void => {
+  const focusProcess = (): void => {
+    setEdit && setEdit(false);
+    setFocus(true);
+  };
+
+  const blurProcess = (): void => {
     setFocus(false);
+    setTimeSelector(false);
+    focus && saveTodo();
+  };
 
+  const saveTodo = (): void => {
     if (text) {
       let todoObj: TodoDataModel = {};
 
       // 기존 Todo 업데이트 확인 조건문
-      if (value && index !== undefined) {
+      if (item && index !== undefined) {
         todoObj = {
           [yyyymmdd]: data[yyyymmdd].map((ele, idx) =>
-            Object.assign({}, ele, idx === index && { value: text })
+            Object.assign({}, ele, idx === index && { time, value: text })
           ),
         };
       } else {
         // 기존 배열 데이터 확인 조건문
         if (data[yyyymmdd]) {
           todoObj = {
-            [yyyymmdd]: [...data[yyyymmdd], { time: '18:00', value: text }],
+            [yyyymmdd]: [...data[yyyymmdd], { time, value: text }],
           };
         } else {
           todoObj = {
-            [yyyymmdd]: [{ time: '18:00', value: text }],
+            [yyyymmdd]: [{ time, value: text }],
           };
         }
       }
@@ -60,15 +76,26 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
     setData((prev) => ({ ...prev, ...todoObj }));
   };
 
+  const handleDate = (type: 'hour' | 'minute', value: string): void => {
+    const timeArr = time.split(':');
+
+    if (type === 'hour') {
+      timeArr[0] = value;
+    } else {
+      timeArr[1] = value;
+    }
+
+    setTime(timeArr.join(':'));
+  };
+
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (/Escape|Enter/g.test(e.key)) {
-      saveTodo((e.target as HTMLInputElement).value);
       e.currentTarget.blur();
     }
   };
 
   useMountEffect(() => {
-    if (!value) {
+    if (!item) {
       (document.querySelector(Input.toString()) as HTMLInputElement).focus();
       setFocus(true);
     }
@@ -76,16 +103,27 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
 
   return (
     <Box focus={focus}>
-      <Input
-        type="text"
-        defaultValue={value}
-        onFocus={() => {
-          setEdit && setEdit(false);
-          setFocus(true);
-        }}
-        onBlur={(e) => focus && saveTodo(e.target.value)}
-        onKeyDown={(e) => handleKeydown(e)}
-      />
+      <EditBox onFocus={focusProcess} onBlur={blurProcess}>
+        <Input
+          type="text"
+          defaultValue={item?.value}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => handleKeydown(e)}
+        />
+        <Time
+          onClick={() => {
+            setTimeSelector((prev) => !prev);
+          }}
+        >
+          <TimeDisplay>{time}</TimeDisplay>
+          {timeSelector && (
+            <TimePicker
+              time={time.split(':')}
+              func={(type, value) => handleDate(type, value)}
+            />
+          )}
+        </Time>
+      </EditBox>
       {edit && (
         <Remove onClick={() => index !== undefined && removeTodo(index)}>
           <RemoveIcon src={minus} />
@@ -100,6 +138,7 @@ export default TodoEditor;
 const Box = styled.li<{ focus: boolean }>`
   display: flex;
   align-items: center;
+  position: relative;
   border-bottom: 1px solid ${({ theme }) => theme.color['grey-200']};
   box-sizing: border-box;
   transition: border-bottom 200ms;
@@ -115,6 +154,13 @@ const Box = styled.li<{ focus: boolean }>`
   }
 `;
 
+const EditBox = styled.label`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const Input = styled.input`
   width: 100%;
   padding: 0 0 6px;
@@ -128,7 +174,29 @@ const Input = styled.input`
   }
 `;
 
+const Time = styled.button`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 6px;
+  margin-left: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+`;
+
+const TimeDisplay = styled.label`
+  padding: 2px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  ${({ theme }) => theme.ui.hover_bg};
+  cursor: inherit;
+  color: ${({ theme }) => theme.color['blue-800']};
+  ${({ theme }) => theme.font.Body3Label};
+`;
+
 const Remove = styled.button`
+  margin-left: 8px;
   padding: 2px;
   border: 0;
 `;

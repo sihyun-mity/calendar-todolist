@@ -34,13 +34,14 @@ const Todo = (): JSX.Element => {
         {data[yyyymmdd]?.map((ele, idx) => (
           <TodoEditor
             key={`todo-${yyyymmdd}-${idx}-${ele.value}`}
-            value={ele.value}
+            item={ele}
             index={idx}
             edit={editTodo}
             setEdit={setEditTodo}
           />
         ))}
       </List>
+      {/* <span>{date}</span> */}
     </Box>
   );
 };

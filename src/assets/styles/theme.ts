@@ -51,74 +51,63 @@ const font = {
     font-size: 1.25rem;
     font-weight: 800;
     line-height: 1.5;
-    letter-spacing: -0.4px;
   }`,
 
   Heading7Medium: `{
     font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.5;
-    letter-spacing: -0.4px;
   }`,
 
   Body1Bold: `{
     font-size: 1.125rem;
     font-weight: 800;
     line-height: 1.56;
-    letter-spacing: -0.18px;
   }`,
 
   Body1Label: `{
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.33;
-    letter-spacing: -0.27px;
   }`,
 
   Body1Paragraph: `{
     font-size: 1.125rem;
     line-height: 1.56;
-    letter-spacing: -0.27px;
   }`,
 
   Body2Bold: `{
     font-size: 1rem;
     font-weight: 800;
     line-height: 1.5;
-    letter-spacing: -0.05px;
   }`,
 
   Body2Label: `{
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.25;
-    letter-spacing: -0.05px;
   }`,
 
   Body2Paragraph: `{
     font-size: 1rem;
     line-height: 1.5;
-    letter-spacing: -0.05px;
   }`,
 
   Body3Bold: `{
     font-size: 0.875rem;
     font-weight: 800;
     line-height: 1.57;
-    letter-spacing: -0.04px;
   }`,
 
   Body3Label: `{
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.21;
-    letter-spacing: -0.04px;
   }`,
 
   Body3Paragraph: `{
     font-size: 0.875rem;
     line-height: 1.57;
-    letter-spacing: -0.04px;
   }`,
 
   Caption1Label: `{

@@ -1,17 +1,13 @@
 import { addYears, format, subYears } from 'date-fns';
-import {
-  HTMLAttributes,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled, { css } from 'styled-components';
 import { useMountEffect } from '../hooks';
 import { date } from '../stores';
 
-const DatePicker = (props?: HTMLAttributes<HTMLDivElement>): JSX.Element => {
+const DatePicker = (
+  props?: React.HTMLAttributes<HTMLDivElement>
+): JSX.Element => {
   const [years, setYears] = useState<number[]>([]);
   const [months, setMonths] = useState<number[]>([]);
   const [ready, setReady] = useState<boolean>(false);
@@ -155,4 +151,8 @@ const Item = styled.li<{ selected: boolean }>`
     css`
       background-color: ${props.theme.color['grey-200']};
     `}
+
+  &:not(:last-of-type) {
+    margin-bottom: 4px;
+  }
 `;
