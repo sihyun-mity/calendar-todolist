@@ -74,10 +74,11 @@ export default TimePicker;
 const Box = styled.div`
   width: max-content;
   display: flex;
-  position: absolute;
-  left: 0;
+  position: fixed;
+  right: 16px;
   z-index: 1;
-  padding: 6px 8px;
+  margin-top: calc(0.875rem + 6px);
+  padding: 3px 4px;
   border-radius: 6px;
   background-color: #fff;
   box-sizing: border-box;
@@ -86,7 +87,7 @@ const Box = styled.div`
 `;
 
 const List = styled.ul`
-  max-height: 20vh;
+  max-height: 18vh;
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
@@ -94,7 +95,7 @@ const List = styled.ul`
   }
 
   &:first-of-type {
-    margin-right: 12px;
+    margin-right: 4px;
   }
 `;
 
@@ -103,7 +104,7 @@ const Item = styled.li<{ selected: boolean }>`
   border-radius: 6px;
   color: ${({ theme }) => theme.color['grey-800']};
 
-  ${({ theme }) => theme.font.Body1Label};
+  ${({ theme }) => theme.font.Body3Label};
   ${({ theme }) => theme.ui.hover_bg};
 
   ${(props) =>
@@ -111,4 +112,8 @@ const Item = styled.li<{ selected: boolean }>`
     css`
       background-color: ${props.theme.color['grey-200']};
     `}
+
+  &:not(:last-of-type) {
+    margin-bottom: 2px;
+  }
 `;

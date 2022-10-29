@@ -151,4 +151,8 @@ const Item = styled.li<{ selected: boolean }>`
     css`
       background-color: ${props.theme.color['grey-200']};
     `}
+
+  &:not(:last-of-type) {
+    margin-bottom: 4px;
+  }
 `;

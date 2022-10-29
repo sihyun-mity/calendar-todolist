@@ -21,13 +21,24 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
   const yyyymmdd = useRecoilValue(formattingDate);
   const [focus, setFocus] = useState<boolean>(false);
   const [data, setData] = useRecoilState(getTodo);
+  const [text, setText] = useState<string>(item?.value || '');
   const [time, setTime] = useState<string>(
     item?.time || format(new Date(), 'k:mm')
   );
+  const [timeSelector, setTimeSelector] = useState<boolean>(false);
 
-  const saveTodo = (text?: string): void => {
+  const focusProcess = (): void => {
+    setEdit && setEdit(false);
+    setFocus(true);
+  };
+
+  const blurProcess = (): void => {
     setFocus(false);
+    setTimeSelector(false);
+    focus && saveTodo();
+  };
 
+  const saveTodo = (): void => {
     if (text) {
       let todoObj: TodoDataModel = {};
 
@@ -35,18 +46,18 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
       if (item && index !== undefined) {
         todoObj = {
           [yyyymmdd]: data[yyyymmdd].map((ele, idx) =>
-            Object.assign({}, ele, idx === index && { value: text })
+            Object.assign({}, ele, idx === index && { time, value: text })
           ),
         };
       } else {
         // 기존 배열 데이터 확인 조건문
         if (data[yyyymmdd]) {
           todoObj = {
-            [yyyymmdd]: [...data[yyyymmdd], { time: '18:00', value: text }],
+            [yyyymmdd]: [...data[yyyymmdd], { time, value: text }],
           };
         } else {
           todoObj = {
-            [yyyymmdd]: [{ time: '18:00', value: text }],
+            [yyyymmdd]: [{ time, value: text }],
           };
         }
       }
@@ -66,17 +77,19 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
   };
 
   const handleDate = (type: 'hour' | 'minute', value: string): void => {
+    const timeArr = time.split(':');
+
     if (type === 'hour') {
-      console.log(value);
-      // setTargetDate(new Date(`${value}-${targetMonth}-01`));
+      timeArr[0] = value;
     } else {
-      // setTargetDate(new Date(`${targetYear}-${value}-01`));
+      timeArr[1] = value;
     }
+
+    setTime(timeArr.join(':'));
   };
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (/Escape|Enter/g.test(e.key)) {
-      saveTodo((e.target as HTMLInputElement).value);
       e.currentTarget.blur();
     }
   };
@@ -90,25 +103,25 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
 
   return (
     <Box focus={focus}>
-      <EditBox>
+      <EditBox onFocus={focusProcess} onBlur={blurProcess}>
         <Input
           type="text"
           defaultValue={item?.value}
-          onFocus={() => {
-            setEdit && setEdit(false);
-            setFocus(true);
-          }}
-          onBlur={(e) => focus && saveTodo(e.target.value)}
+          onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => handleKeydown(e)}
         />
-        <Time>
+        <Time
+          onClick={() => {
+            setTimeSelector((prev) => !prev);
+          }}
+        >
           <TimeDisplay>{time}</TimeDisplay>
-          {/* {item?.time && (
-        <TimePicker
-          time={item?.time.split(':')}
-          func={(type, value) => handleDate(type, value)}
-        />
-      )} */}
+          {timeSelector && (
+            <TimePicker
+              time={time.split(':')}
+              func={(type, value) => handleDate(type, value)}
+            />
+          )}
         </Time>
       </EditBox>
       {edit && (
@@ -165,15 +178,18 @@ const Time = styled.button`
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 2px;
   margin-bottom: 6px;
+  margin-left: 8px;
+  padding: 0;
   border: 0;
   border-radius: 4px;
-  box-sizing: border-box;
-  ${({ theme }) => theme.ui.hover_bg};
 `;
 
 const TimeDisplay = styled.label`
+  padding: 2px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  ${({ theme }) => theme.ui.hover_bg};
   cursor: inherit;
   color: ${({ theme }) => theme.color['blue-800']};
   ${({ theme }) => theme.font.Body3Label};
