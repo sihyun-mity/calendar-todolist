@@ -28,7 +28,10 @@ const Todo = (): JSX.Element => {
 
   return (
     <Box>
-      <TodoHandler makeTodo={setMakeTodo} editTodo={setEditTodo} />
+      <TodoHandler
+        makeTodo={setMakeTodo}
+        editTodo={{ status: editTodo, handler: setEditTodo }}
+      />
       <List>
         {makeTodo && <TodoEditor onComplete={() => setMakeTodo(false)} />}
         {data[yyyymmdd]?.map((ele, idx) => (
@@ -41,7 +44,6 @@ const Todo = (): JSX.Element => {
           />
         ))}
       </List>
-      {/* <span>{date}</span> */}
     </Box>
   );
 };

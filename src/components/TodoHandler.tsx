@@ -7,11 +7,17 @@ import plus from '../assets/images/plus.png';
 
 interface TodoHandlerPropsType {
   makeTodo: React.Dispatch<React.SetStateAction<boolean>>;
-  editTodo: React.Dispatch<React.SetStateAction<boolean>>;
+  editTodo: EditTodoProperty;
 }
+
+type EditTodoProperty = {
+  status: boolean;
+  handler: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const TodoHandler = (props: TodoHandlerPropsType): JSX.Element => {
   const { makeTodo, editTodo } = props;
+  const { status, handler } = editTodo;
   const targetDate = useRecoilValue(date);
   const today = format(targetDate, 'd eeee', { locale: ko });
 
@@ -19,12 +25,14 @@ const TodoHandler = (props: TodoHandlerPropsType): JSX.Element => {
     <Box>
       <Date>{today}</Date>
       <Controller onMouseDown={(e) => e.stopPropagation()}>
-        <EditBtn onClick={() => editTodo((prev) => !prev)}>편집</EditBtn>
+        <EditBtn onClick={() => handler((prev) => !prev)}>
+          {status ? '완료' : '편집'}
+        </EditBtn>
         <PlusBtn
           src={plus}
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
-            editTodo(false);
+            handler(false);
             makeTodo(true);
           }}
         />
