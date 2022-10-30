@@ -33,12 +33,13 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
   };
 
   const blurProcess = (): void => {
-    setFocus(false);
     setTimeSelector(false);
-    focus && saveTodo();
+    saveTodo();
   };
 
   const saveTodo = (): void => {
+    setFocus(false);
+
     if (text) {
       let todoObj: TodoDataModel = {};
 
@@ -109,11 +110,11 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
           defaultValue={item?.value}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => handleKeydown(e)}
+          onClick={() => setTimeSelector(false)}
         />
         <Time
-          onClick={() => {
-            setTimeSelector((prev) => !prev);
-          }}
+          onClick={() => setTimeSelector((prev) => !prev)}
+          onMouseDown={(e) => onComplete && e.preventDefault()}
         >
           <TimeDisplay>{time}</TimeDisplay>
           {timeSelector && (
