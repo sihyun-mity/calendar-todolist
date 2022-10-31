@@ -60,5 +60,6 @@ const Box = styled.aside`
 `;
 
 const List = styled.ul`
+  height: 100%;
   overflow-y: auto;
 `;
