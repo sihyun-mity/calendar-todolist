@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { date } from '../stores';
+import { date, formattingDate, getTodo } from '../stores';
 import plus from '../assets/images/plus.png';
 
 interface TodoHandlerPropsType {
@@ -18,6 +18,8 @@ type EditTodoProperty = {
 const TodoHandler = (props: TodoHandlerPropsType): JSX.Element => {
   const { makeTodo, editTodo } = props;
   const { status, handler } = editTodo;
+  const yyyymmdd = useRecoilValue(formattingDate);
+  const data = useRecoilValue(getTodo);
   const targetDate = useRecoilValue(date);
   const today = format(targetDate, 'd eeee', { locale: ko });
 
@@ -25,9 +27,11 @@ const TodoHandler = (props: TodoHandlerPropsType): JSX.Element => {
     <Box>
       <Date>{today}</Date>
       <Controller onMouseDown={(e) => e.stopPropagation()}>
-        <EditBtn onClick={() => handler((prev) => !prev)}>
-          {status ? '완료' : '편집'}
-        </EditBtn>
+        {data?.[yyyymmdd]?.[0] && (
+          <EditBtn onClick={() => handler((prev) => !prev)}>
+            {status ? '완료' : '편집'}
+          </EditBtn>
+        )}
         <PlusBtn
           src={plus}
           onMouseDown={(e) => e.preventDefault()}

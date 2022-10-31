@@ -46,15 +46,25 @@ const TodoEditor = (props: TodoEditorPropsType): JSX.Element => {
       // 기존 Todo 업데이트 확인 조건문
       if (item && index !== undefined) {
         todoObj = {
-          [yyyymmdd]: data[yyyymmdd].map((ele, idx) =>
-            Object.assign({}, ele, idx === index && { time, value: text })
-          ),
+          [yyyymmdd]: data[yyyymmdd]
+            .map((ele, idx) =>
+              Object.assign({}, ele, idx === index && { time, value: text })
+            )
+            .sort(
+              (a, b) =>
+                Number(a.time.replace(/:/g, '')) -
+                Number(b.time.replace(/:/g, ''))
+            ),
         };
       } else {
         // 기존 배열 데이터 확인 조건문
         if (data[yyyymmdd]) {
           todoObj = {
-            [yyyymmdd]: [...data[yyyymmdd], { time, value: text }],
+            [yyyymmdd]: [...data[yyyymmdd], { time, value: text }].sort(
+              (a, b) =>
+                Number(a.time.replace(/:/g, '')) -
+                Number(b.time.replace(/:/g, ''))
+            ),
           };
         } else {
           todoObj = {
@@ -176,8 +186,6 @@ const Input = styled.input`
 `;
 
 const Time = styled.button`
-  display: flex;
-  flex-direction: column;
   position: relative;
   margin-bottom: 6px;
   margin-left: 8px;

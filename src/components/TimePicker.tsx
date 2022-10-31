@@ -74,10 +74,9 @@ export default TimePicker;
 const Box = styled.div`
   width: max-content;
   display: flex;
-  position: fixed;
-  right: 16px;
+  position: absolute;
+  right: 0;
   z-index: 1;
-  margin-top: calc(0.875rem + 6px);
   padding: 3px 4px;
   border-radius: 6px;
   background-color: #fff;
