@@ -34,7 +34,7 @@ const Todo = (): JSX.Element => {
       />
       <List>
         {makeTodo && <TodoEditor onComplete={() => setMakeTodo(false)} />}
-        {data[yyyymmdd]?.map((ele, idx) => (
+        {data?.[yyyymmdd]?.map((ele, idx) => (
           <TodoEditor
             key={`todo-${yyyymmdd}-${idx}-${ele.value}`}
             item={ele}
