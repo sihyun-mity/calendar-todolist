@@ -176,8 +176,6 @@ const Input = styled.input`
 `;
 
 const Time = styled.button`
-  display: flex;
-  flex-direction: column;
   position: relative;
   margin-bottom: 6px;
   margin-left: 8px;
