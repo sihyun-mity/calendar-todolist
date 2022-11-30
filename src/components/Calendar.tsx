@@ -23,10 +23,11 @@ const Calendar = (): JSX.Element => {
         ?.split('-')[1]
         .split('') || [];
 
-    targetClass.splice(4, 0, '-');
-    targetClass.splice(7, 0, '-');
-
-    setTargetDate(new Date(targetClass.join('')));
+    if (targetClass[0]) {
+      targetClass.splice(4, 0, '-');
+      targetClass.splice(7, 0, '-');
+      setTargetDate(new Date(targetClass.join('')));
+    }
   };
 
   return (
